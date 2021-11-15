@@ -1,10 +1,9 @@
 const { checkDbConnectionStatus } = require('./checkDbConnection');
+const { checkChurches } = require('./checkChurch');
+const { newSong } = require('./addSong');
 
 exports.handler = async (event,context) => {
 	
-	
-	//this code i am using based on my requirement 
-	//I am usinng apigate due to that I have written my logic 
 	console.log(event['body-json']);
 	console.log(event['context']['resource-path']);
 	
@@ -14,10 +13,20 @@ exports.handler = async (event,context) => {
 		return JSON.stringify(status);
 	}
 	
-	//based on your requirement you can write your logic to call the 
-	// checkDbConnectionStatus function
+	if(event['context']['resource-path'] === '/checkchurch'){
+		let church_name = event['body-json']['church_name'];
+		let church_pass = event['body-json']['church_pass'];
+		let churchDetails= await checkChurches(church_name,church_pass);
+		console.log(churchDetails);
+		return churchDetails;
+	}
+
 	
-	/*
-	yoour logic goes here to call the checkDbConnectionStatus fuction
-	*/
+	if(event['context']['resource-path'] === '/addsong'){
+		let title = event['body-json']['songtitleid'];
+		let song = event['body-json']['Song'];
+		let newSongs= await newSong(title,song);
+		console.log(newSongs);
+		return newSongs;
+	}
 };
